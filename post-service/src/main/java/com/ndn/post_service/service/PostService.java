@@ -1,5 +1,7 @@
 package com.ndn.post_service.service;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +35,10 @@ public class PostService {
     }
     public List<Post> getAllPosts(){
         return postRepository.findAll();
+    }
+    public Post findPostById(Long id){
+        Optional<Post> resp = postRepository.findById(id);
+        if(resp.isPresent()) return resp.get();
+        return null;
     }
 }
