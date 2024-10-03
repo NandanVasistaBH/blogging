@@ -1,8 +1,8 @@
 package com.ndn.post_service.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +22,23 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        return ResponseEntity.ok(postService.createPost(post));
+        Post resp =  postService.createPost(post);
+        System.out.println("resp "+resp);
+        if(resp==null) return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Post>> getPostsByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(postService.getPostsByUserId(userId));
+    }
+    @GetMapping("/all")
+    public ResponseEntity<List<Post>> getAllPosts(){
+        List<Post> list = postService.getAllPosts();
+        if(list==null || list.size()==0){
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(list,HttpStatus.OK);
+
     }
 }
